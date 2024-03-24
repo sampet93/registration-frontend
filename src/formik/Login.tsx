@@ -1,5 +1,6 @@
 // Render Prop
-import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
+import { Formik, Form, ErrorMessage, FormikHelpers } from "formik";
+import { TextField, Box, Button, Typography } from "@mui/material";
 
 interface FormValues {
   email: string;
@@ -26,7 +27,6 @@ const Login = ({}: OwnProps) => {
 
   return (
     <div>
-      <h1>Login</h1>
       <Formik
         initialValues={initialValues}
         validate={(values) => {
@@ -42,15 +42,23 @@ const Login = ({}: OwnProps) => {
         }}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, errors }) => (
           <Form>
-            <Field type="email" name="email" />
-            <ErrorMessage name="email" component="div" />
-            <Field type="password" name="password" />
-            <ErrorMessage name="password" component="div" />
-            <button type="submit" disabled={isSubmitting}>
-              Login
-            </button>
+            <Box display="flex" flexDirection="column" gap={2}>
+              <Typography variant="h4">Login</Typography>
+              <TextField type="email" name="email" label="Email" fullWidth />
+              <ErrorMessage name="email" component="div" />
+              <TextField
+                type="password"
+                name="password"
+                label="Password"
+                fullWidth
+              />
+              <ErrorMessage name="password" component="div" />
+              <Button type="submit" disabled={isSubmitting} variant="contained">
+                Login
+              </Button>
+            </Box>
           </Form>
         )}
       </Formik>
