@@ -1,6 +1,8 @@
 // Render Prop
-import { Formik, Form, ErrorMessage, FormikHelpers } from "formik";
-import { TextField, Box, Button, Typography } from "@mui/material";
+import { FormikHelpers, useFormik } from "formik";
+import { TextField, Box, Button, Typography, Container } from "@mui/material";
+import loginValidationSchema from "./Login.schema";
+import React from "react";
 
 interface FormValues {
   email: string;
@@ -20,48 +22,59 @@ const Login = ({}: OwnProps) => {
     setTimeout(() => {
       alert(JSON.stringify(values, null, 2));
       helpers.setSubmitting(false), 1000;
-    });
+    }, 1000);
   };
 
-  const validate = (values: FormValues) => {};
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+    validationSchema: loginValidationSchema,
+  });
 
   return (
     <div>
-      <Formik
-        initialValues={initialValues}
-        validate={(values) => {
-          const errors = {};
-          if (!values.email) {
-            errors.email = "Required";
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
-            errors.email = "Invalid email address";
-          }
-          return errors;
-        }}
-        onSubmit={onSubmit}
-      >
-        {({ isSubmitting, errors }) => (
-          <Form>
-            <Box display="flex" flexDirection="column" gap={2}>
-              <Typography variant="h4">Login</Typography>
-              <TextField type="email" name="email" label="Email" fullWidth />
-              <ErrorMessage name="email" component="div" />
-              <TextField
-                type="password"
-                name="password"
-                label="Password"
-                fullWidth
-              />
-              <ErrorMessage name="password" component="div" />
-              <Button type="submit" disabled={isSubmitting} variant="contained">
-                Login
-              </Button>
-            </Box>
-          </Form>
-        )}
-      </Formik>
+      <React.Fragment>
+        <form onSubmit={formik.handleSubmit}>
+          <Container maxWidth="xs">
+            <Typography variant="h5" fontWeight={600} sx={{ marginBottom: 2 }}>
+              Login
+            </Typography>
+            <TextField
+              type="email"
+              name="email"
+              label="Email"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              error={formik.touched.email && Boolean(formik.errors.email)}
+              helperText={formik.touched.email && formik.errors.email}
+              fullWidth
+              sx={{ marginBottom: 1 }}
+            />
+            <TextField
+              type="password"
+              name="password"
+              label="Password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+              fullWidth
+              sx={{ marginBottom: 2 }}
+            />
+            <Button
+              type="submit"
+              disabled={formik.isSubmitting || !formik.isValid}
+              variant="contained"
+              onClick={() => onSubmit}
+              fullWidth
+            >
+              Login
+            </Button>
+          </Container>
+        </form>
+      </React.Fragment>
     </div>
   );
 };
