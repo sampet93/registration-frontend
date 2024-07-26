@@ -40,3 +40,10 @@
 .read-the-docs {
   color: #888;
 }
+
+.test {
+  height: 100vh;
+  width: 100%;
+  background: rgb(255,234,160);
+  background: linear-gradient(90deg, rgba(255,234,160,1) 0%, rgba(246,184,151,1) 32%, rgba(227,227,98,1) 67%, rgba(135,235,255,1) 100%);
+}

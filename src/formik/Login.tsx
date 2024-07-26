@@ -3,6 +3,7 @@ import { FormikHelpers, useFormik } from "formik";
 import { TextField, Box, Button, Typography, Container } from "@mui/material";
 import loginValidationSchema from "./Login.schema";
 import React from "react";
+import axios from "axios";
 
 interface FormValues {
   email: string;
@@ -19,10 +20,13 @@ interface OwnProps {}
 const Login = ({}: OwnProps) => {
   const onSubmit = (values: FormValues, helpers: FormikHelpers<FormValues>) => {
     console.log({ values, helpers });
-    setTimeout(() => {
-      alert(JSON.stringify(values, null, 2));
-      helpers.setSubmitting(false), 1000;
-    }, 1000);
+
+    axios
+      .post("https://jsonplaceholder.typicode.com/posts", values)
+      .then((response) => {
+        console.log(response.data);
+        helpers.setSubmitting(false);
+      });
   };
 
   const formik = useFormik({
@@ -37,7 +41,7 @@ const Login = ({}: OwnProps) => {
         <form onSubmit={formik.handleSubmit}>
           <Container maxWidth="xs">
             <Typography variant="h5" fontWeight={600} sx={{ marginBottom: 2 }}>
-              Login
+              Sign in to platform
             </Typography>
             <TextField
               type="email"
@@ -70,7 +74,7 @@ const Login = ({}: OwnProps) => {
               onClick={() => onSubmit}
               fullWidth
             >
-              Login
+              Sign in
             </Button>
           </Container>
         </form>
